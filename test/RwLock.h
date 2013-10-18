@@ -18,8 +18,28 @@ public:
 	~RwLock();
 	apr_status_t create(apr_pool_t *mp);
 	void destroy();
-	inline void lock(int lock_type);
-	inline void unlock();
+	inline void lock(int lock_type = _wr)
+	{
+		switch(lock_type)
+		{
+		case _wr:
+			apr_thread_rwlock_wrlock(m_rwlock);
+			break;
+		case _rd:
+			apr_thread_rwlock_rdlock(m_rwlock);
+			break;
+		case _tryrd:
+			apr_thread_rwlock_tryrdlock(m_rwlock);
+			break;
+		case _trywr:
+			apr_thread_rwlock_trywrlock(m_rwlock);
+			break;
+		}
+	}
+	inline void unlock()
+	{
+		apr_thread_rwlock_unlock(m_rwlock);
+	}
 private:
 	apr_thread_rwlock_t    *m_rwlock;
 };
@@ -28,7 +48,7 @@ template<typename T>
 class Loker
 {
 public:
-	Loker(T &locker,int lock_type)
+	Loker(T &locker,int lock_type = _wr)
 	{
 		m_locker = &locker;
 		locker->lock(lock_type);
