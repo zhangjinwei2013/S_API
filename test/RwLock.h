@@ -2,6 +2,7 @@
 #define RWLOCK_H_
 
 #include <apr_thread_rwlock.h>
+#include <apr_thread_mutex.h>
 
 enum
 {
@@ -44,6 +45,17 @@ private:
 	apr_thread_rwlock_t    *m_rwlock;
 };
 
+class Mutex_
+{
+public:
+	Mutex_();
+	~Mutex_();
+	apr_status_t create(apr_pool_t *mp);
+	void destory();
+	inline void lock();
+protected:
+private:
+};
 template<typename T>
 class Loker
 {

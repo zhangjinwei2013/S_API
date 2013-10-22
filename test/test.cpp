@@ -12,8 +12,6 @@ int main(int argc, char* argv[])
 {
 	apr_initialize();
 	apr_pool_create(&g_mp,NULL);
-	A a(g_mp);
-	B b(g_mp);
 	apr_pool_destroy(g_mp);
 	apr_terminate();
 	return 0;
